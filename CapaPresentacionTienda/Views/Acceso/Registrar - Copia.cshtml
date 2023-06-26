@@ -1,0 +1,207 @@
+﻿@model CapaEntidad.Usuario_Admin
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Registrar</title>
+    @*<link href="~/Content/Site.css" rel="stylesheet" />*@
+    <link href="~/Content/acceso.css" rel="stylesheet" />
+</head>
+@*<body class="bg-dark">
+    <div id="layoutAuthentication">
+        <div id="layoutAuthentication_content">
+            <main>
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-7">
+                            <div class="card shadow-lg border-0 rounded-lg mt-5">
+                                <div class="card-header"><h3 class="text-center font-weight-light my-4">Crear Cuenta</h3></div>
+                                <div class="card-body">
+                                    <form action="@Url.Action("Registrar","Acceso")" method="post">
+
+                                        <input id="txtid" type="hidden" value="T002" />
+
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+
+
+                                                @Html.TextBoxFor(m => m.Opersona.ObTipoPersona.id_tipo, new { @class = "form-control", @Type = "hidden", value = ViewData["id_tipo"] })
+                                                @Html.TextBoxFor(m => m.Ousuario.Reestrablecer, new { @class = "form-control", @Type = "hidden", value = ViewData["REES"] })
+
+
+                                                <div class="form-floating mb-3 mb-md-0">
+                                                    @Html.TextBoxFor(m => m.Opersona.Nombre, new { @class = "form-control", @id = "txtNombre", @placeholder = ".", @autocomplete = "off", value = ViewData["Nombre"] })
+                                                    @Html.Label("txtNombre", "Nombre")
+                                                    
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-floating">
+                                                    @Html.TextBoxFor(m => m.Opersona.Apellido, new { @class = "form-control", @id = "txtApellido", @placeholder = ".", @autocomplete = "off", value = ViewData["Apellido"] })
+                                                    @Html.Label("txtApellido", "Apellido")
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            @Html.TextBoxFor(m => m.Opersona.correo, new { @class = "form-control", @id = "txtCorreo", @placeholder = ".", @autocomplete = "off", value = ViewData["correo"] })
+                                            @Html.Label("txtCorreo", "Correo")
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            @Html.TextBoxFor(m => m.Opersona.Direccion, new { @class = "form-control", @id = "txtDireccion", @placeholder = ".", @autocomplete = "off", value = ViewData["Direccion"] })
+                                            @Html.Label("txtDireccion", "Direccion")
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3 mb-md-0">
+                                                    @Html.TextBoxFor(m => m.Ousuario.usuario, new { @class = "form-control", @id = "txtUsuario", @placeholder = ".", @autocomplete = "off", value = ViewData["usuario"] })
+                                                    @Html.Label("txtUsuario", " Nombre de Usuario")
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-floating">
+                                                    @Html.PasswordFor(m => m.Ousuario.contraseña, new { @class = "form-control", @id = "txtContra", @autocomplete = "off", @placeholder = "." })
+                                                    @Html.Label("txtContra", "Contraseña")
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3 mb-md-0">
+                                                    @Html.TextBoxFor(m => m.Opersona.Telefono, new { @class = "form-control", @id = "txtTelefono", @placeholder = ".", @autocomplete = "off", value = ViewData["Telefono"] })
+                                                    @Html.Label("txtTelefono", " Teléfono")
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3 mb-md-0">
+                                                    @Html.PasswordFor(m => m.Ousuario.ConfirmarContra, new { @class = "form-control", @id = "txtConfirmarContra", @autocomplete = "off", @placeholder = "." })
+                                                    @Html.Label("txtConfirmarContra", "Confirmar Contraseña")
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @{
+                                            if (ViewBag.Error != null)
+                                            {
+                                                <div class="row mb-3">
+                                                    <div class="alert alert-danger" role="alert">
+                                                        @ViewBag.Error
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+
+                                        <div class="row mb-3">
+                                            <div class="mt-4 mb-0">
+                                                <div class="d-grid"><button class="btn btn-primary btn-block" type="submit">Crear Cuenta</button></div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="card-footer text-center py-3">
+                                    <div class="small"><a href="@Url.Action("Index","Acceso")">¿Ya tienes una cuenta? Iniciar Sesión</a></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+    </div>
+ <script src="~/Scripts/bootstrap.bundle.js"></script>
+</body>*@
+
+<body>
+    <div class="login registrar">
+        <h2>REGISTRAR</h2>
+        <hr>
+        <form action="@Url.Action("Registrar","Acceso")" class="form registrar" method="post">
+            <input id="txtid" type="hidden" value="T002" />
+            @Html.TextBoxFor(m => m.Opersona.ObTipoPersona.id_tipo, new { @class = "form-control", @Type = "hidden", value = ViewData["id_tipo"] })
+            @Html.TextBoxFor(m => m.Ousuario.Reestrablecer, new { @class = "form-control", @Type = "hidden", value = ViewData["REES"] })
+
+            <div class="field registrar">
+                <span class="icon">
+                    <ion-icon name="person"></ion-icon>
+                </span>
+                @Html.TextBoxFor(m => m.Opersona.Nombre, new { @required = true, @class = "form-control", @id = "txtNombre", @autocomplete = "off", value = ViewData["Nombre"] })
+                @Html.Label("txtNombre", "Nombre")
+            </div>
+            <div class="field registrar">
+                <span class="icon">
+                    <ion-icon name="person"></ion-icon>
+                </span>
+                @Html.TextBoxFor(m => m.Opersona.Apellido, new { @required = true, @class = "form-control", @id = "txtApellido", @autocomplete = "off", value = ViewData["Apellido"] })
+                @Html.Label("txtApellido", "Apellido")
+            </div>
+            <div class="field registrar">
+                <span class="icon">
+                    <ion-icon name="mail"></ion-icon>
+                </span>
+                @Html.TextBoxFor(m => m.Opersona.correo, new { @required = true, @class = "form-control", @id = "txtCorreo", @autocomplete = "off", value = ViewData["correo"] })
+                @Html.Label("txtCorreo", "Correo")
+            </div>
+            <div class="field registrar">
+                <span class="icon">
+                    <ion-icon name="compass"></ion-icon>
+                </span>
+                @Html.TextBoxFor(m => m.Opersona.Direccion, new { @required = true, @class = "form-control", @id = "txtDireccion", @autocomplete = "off", value = ViewData["Direccion"] })
+                @Html.Label("txtDireccion", "Direccion")
+            </div>
+            <div class="field registrar">
+                <span class="icon">
+                    <ion-icon name="person-add"></ion-icon>
+                </span>
+                @Html.TextBoxFor(m => m.Ousuario.usuario, new { @required = true, @class = "form-control", @id = "txtUsuario", @autocomplete = "off", value = ViewData["usuario"] })
+                @Html.Label("txtUsuario", "Usuario")
+            </div>
+            <div class="field registrar">
+                <span class="icon">
+                    <ion-icon name="lock-closed"></ion-icon>
+                </span>
+                @Html.PasswordFor(m => m.Ousuario.contraseña, new { @required = true, @class = "form-control", @id = "txtContra", @autocomplete = "off" })
+                @Html.Label("txtContra", "Contraseña")
+            </div>
+            <div class="field registrar">
+                <span class="icon">
+                    <ion-icon name="call"></ion-icon>
+                </span>
+                @Html.TextBoxFor(m => m.Opersona.Telefono, new { @required = true, @class = "form-control", @id = "txtTelefono", @autocomplete = "off", value = ViewData["Telefono"] })
+                @Html.Label("txtTelefono", " Teléfono")
+            </div>
+            <div class="field registrar">
+                <span class="icon">
+                    <ion-icon name="lock-closed"></ion-icon>
+                </span>
+                @Html.PasswordFor(m => m.Ousuario.ConfirmarContra, new { @required = true, @class = "form-control", @id = "txtConfirmarContra", @autocomplete = "off" })
+                @Html.Label("txtConfirmarContra", "Confirmar Contraseña")
+            </div>
+
+            <div class="form-fotter registrar">
+                <a href="@Url.Action("Index","Acceso")">Ya tienes una cuenta? inicia sesion</a>
+                <button type="submit" class="btn">Crear cuenta</button>
+            </div>
+
+        </form>
+        @{
+            if (ViewBag.Error != null)
+            {
+                <div class="alert registrar" role="alert">
+                    @ViewBag.Error
+                </div>
+            }
+        }
+    </div>
+
+    <script type="module"
+            src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule
+            src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+
+</html>

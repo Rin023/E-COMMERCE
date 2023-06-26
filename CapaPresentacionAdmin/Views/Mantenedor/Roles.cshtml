@@ -1,0 +1,267 @@
+﻿
+@{
+    ViewBag.Title = "Roles";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<ol class="breadcrumb mb-4 mt-4">
+
+    <li class="breadcrumb-item active">Roles</li>
+</ol>
+
+<div class="card">
+    <div class="card-header">
+        <i class="fa fa-users me-2"></i>Crear Roles
+    </div>
+
+    <div class="card-body">
+        <div class="card-body">
+            <div class="row">
+
+                <div class="col-12">
+                    <a style="padding-right:50px;">ACCESO:</a>
+                    <a style="padding-right:30px;">Dashboard <i class="fa fa-check-circle"></i></a>
+                    <input type="checkbox" id="modU" autocomplete="off" />  <a style="padding-right:30px;">Usuarios</a>
+                    <input type="checkbox" id="modV" autocomplete="off" /> <a style="padding-right:30px;">Ventas</a>
+                    <input type="checkbox" id="modP" autocomplete="off" /> <a style="padding-right:30px;">Productos</a>
+                    <input type="checkbox" id="modC" autocomplete="off" /> <a style="padding-right:30px;">Categorias</a>
+                    <a style="padding-right:30px;">Roles <i class="fa fa-lock"></i></a>
+                    <hr />
+                </div>
+                <div class="col-12">
+
+                    <input type="text" id="txtNombreRol" autocomplete="off" placeholder="Ingrese el rol">
+                    <button type="button" class="btn btn-primary" onclick="GuardarRol()">
+                        <i class="fas fa-plus me-3 "></i>Crear
+                    </button>
+                   
+
+                </div>
+
+            </div>
+            <hr />
+            <table id="tablaRoles" class="display cell-border" style="width: 100%">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre rol</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+
+    @*TABLA DE ROLES*@
+
+<script>
+
+
+
+    var tabladata;
+    var filaseleccionada;
+
+        tabladata = $("#tablaRoles").DataTable({
+            rresponsive: true,
+            ordering: false,
+            "ajax": {
+                url: '@Url.Action("ListarRoles", "Mantenedor")',
+                type: "GET",
+                datType: "json",
+            },
+
+            "columns": [
+                { "data": "IdRol" },
+                { "data": "Descripcion" },
+
+                {
+
+                    "data": "IdRol", "render": function (val) {
+                        {
+                            if (val == 'R0001' || val == 'R0002'){
+                                return '<button disabled type="button" class="btn btn-danger btn-sm ms-2 btn-eliminar" ><i class="fas fa-trash"></i></button> '
+
+                            }else{
+                                return '<button type="button" class="btn btn-danger btn-sm ms-2 btn-eliminar" ><i class="fas fa-trash"></i></button> '
+                            }
+                        }
+                    },
+
+                    "orderable": false,
+                    "searchable": false,
+                    "width": "30px"
+                }
+
+            ],
+
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.12.1/i18n/es-ES.json"
+            }  @* Cabiar lenguaje a español *@
+        });
+
+
+      //click ELIMINAR
+    $("#tablaRoles tbody").on("click", '.btn-eliminar', function () {
+
+        var rolSeleccionado = $(this).closest("tr");
+        var data = tabladata.row(rolSeleccionado).data();
+
+           jQuery.ajax({
+                    url: '@Url.Action("eliminarRol", "Mantenedor")',
+                    type: "POST",
+                    data: JSON.stringify({ idRol: data.IdRol }),
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+
+                        if (data.resultado) {
+
+
+                            swal({
+                                title: "Genial!",
+                                text: data.mensaje,
+                                type: "success",
+                                timer: 1700,
+                                showConfirmButton: false
+                            });
+                            tabladata.row(rolSeleccionado).remove().draw();
+                        } else {
+                            swal({
+                                title: ":(",
+                                text: data.mensaje,
+                                type: "error",
+                                showConfirmButton: true
+                            });
+                        }
+                    },
+                    error: function (error) {
+                        console.log(error)
+                    }
+                });
+
+        @*swal({
+            title: "Estas seguro?",
+            text: "Desea eliminar este rol?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonClass: "btn-primary",
+            cancelButtonClass: "btn-danger",
+            confirmButtonText: "Si",
+            cancelButtonText: "No",
+            closeOnConfirm: true
+        },
+            function () {
+
+                jQuery.ajax({
+                    url: '@Url.Action("eliminarRol", "Mantenedor")',
+                    type: "POST",
+                    data: JSON.stringify({ idRol: data.IdRol }),
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+
+                        if (data.resultado) {
+                            swal("", data.mensaje, "success")
+                            tabladata.row(rolSeleccionado).remove().draw();
+                        } else {
+                            swal("", data.mensaje, "error")
+                        }
+                    },
+                    error: function (error) {
+                        console.log(error)
+                    }
+                });
+            });*@
+
+
+    })
+
+        function GuardarRol() {
+
+            var checkUsuarios = document.getElementById("modU").checked;
+            var checkVentas = document.getElementById("modV").checked;
+            var checkProductos = document.getElementById("modP").checked;
+            var checkCategorias = document.getElementById("modC").checked;
+
+            checkUsuarios ? checkUsuarios = 1 : checkUsuarios = 0;
+
+            checkVentas ? checkVentas = 1 : checkVentas = 0;
+
+            checkProductos ? checkProductos = 1 : checkProductos = 0;
+
+            checkCategorias ? checkCategorias = 1 : checkCategorias = 0;
+
+                   jQuery.ajax({
+                        url: '@Url.Action("GuardarRol", "Mantenedor")',
+                        type: "POST",
+                        data: JSON.stringify({ rol: $("#txtNombreRol").val(), idu: checkUsuarios, idv: checkVentas, idc: checkCategorias, idp: checkProductos }),
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        success: function (data) {
+
+
+                            if (data.salida) {
+
+                                swal({
+                                    title: "Genial!",
+                                    text: data.mensaje,
+                                    type: "success",
+                                    timer: 1700,
+                                    showConfirmButton: false
+                                });
+
+                            } else {
+                                swal({
+                                    title: ":(",
+                                    text: data.mensaje,
+                                    type: "error",
+                                    showConfirmButton: true
+                                });
+                            }
+                        }
+                    });
+
+            @*swal({
+                title: "Estas seguro?",
+                text: "Desea crear este rol?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-primary",
+                confirmButtonText: "Si",
+                cancelButtonText: "No",
+                closeOnConfirm: true
+            },
+                function () {
+
+                    jQuery.ajax({
+                        url: '@Url.Action("GuardarRol", "Mantenedor")',
+                        type: "POST",
+                        data: JSON.stringify({ rol: $("#txtNombreRol").val(), idu: checkUsuarios, idv: checkVentas, idc: checkCategorias, idp: checkProductos }),
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        success: function (data) {
+
+
+                            if (data.salida) {
+
+                                swal("", data.mensaje, "success")
+                            } else {
+                                swal("", data.mensaje , "error")
+                            }
+                        }
+                    });
+                });*@
+
+        }
+
+
+</script>
+}
+
+

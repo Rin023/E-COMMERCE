@@ -1,0 +1,144 @@
+﻿@model CapaEntidad.Usuario_Admin
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Registrar</title>
+    <link href="~/Content/styleRegis.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Poppins:600&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a81368914c.js"></script>
+</head>
+
+<body>
+    <div class="contra-container">
+
+        <label class="label">REGISTRAR</label>
+        <hr>
+
+        <form method="post" class="form" action="@Url.Action("Registrar","Acceso")">
+            <input id="txtid" type="hidden" value="T002" />
+            @Html.TextBoxFor(m => m.Opersona.ObTipoPersona.id_tipo, new { @class = "form-control", @Type = "hidden", value = ViewData["id_tipo"] })
+            @Html.TextBoxFor(m => m.Ousuario.Reestrablecer, new { @class = "form-control", @Type = "hidden", value = ViewData["REES"] })
+
+            <div class="input-container">
+
+                <div class="input-div one">
+                    <div class="i">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="div" name="" autocomplete="off" required>
+                        <h5>Nombre</h5>
+                        @Html.TextBoxFor(m => m.Opersona.Nombre, new { @required = true, @class = "input", @id = "txtNombre", @autocomplete = "off", value = ViewData["Nombre"] })
+                        @Html.Label("txtNombre", "")
+                    </div>
+                </div>
+
+
+                <div class="input-div one">
+                    <div class="i">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="div" name="" autocomplete="off" required>
+                        <h5>Apellido</h5>
+                        @Html.TextBoxFor(m => m.Opersona.Apellido, new { @required = true, @class = "input", @id = "txtApellido", @autocomplete = "off", value = ViewData["Apellido"] })
+                        @Html.Label("txtApellido", "")
+                    </div>
+                </div>
+
+
+                <div class="input-div one">
+                    <div class="i">
+                        <i class="fas fa-location-arrow"></i>
+                    </div>
+                    <div class="div" name="" autocomplete="off" required>
+                        <h5>Dirección</h5>
+                        @Html.TextBoxFor(m => m.Opersona.Direccion, new { @required = true, @class = "input", @id = "txtDireccion", @autocomplete = "off", value = ViewData["Direccion"] })
+                        @Html.Label("txtDireccion", "")
+                    </div>
+                </div>
+
+                <div class="input-div one">
+                    <div class="i">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="div" name="" autocomplete="off" required>
+                        <h5>Correo</h5>
+                        @Html.TextBoxFor(m => m.Opersona.correo, new { @required = true, @class = "input", @id = "txtCorreo", @autocomplete = "off", value = ViewData["correo"] })
+                        @Html.Label("txtCorreo", "")
+                    </div>
+                </div>
+
+                <div class="input-div one">
+                    <div class="i">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <div class="div" name="" autocomplete="off" required>
+                        <h5>Telefono</h5>
+                        @Html.TextBoxFor(m => m.Opersona.Telefono, new { @required = true, @class = "input", @id = "txtTelefono", @autocomplete = "off", value = ViewData["Telefono"] })
+                        @Html.Label("txtTelefono", "")
+                    </div>
+                </div>
+
+                <div class="input-div one">
+                    <div class="i">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="div" name="" autocomplete="off" required>
+                        <h5>Usuario</h5>
+                        @Html.TextBoxFor(m => m.Ousuario.usuario, new { @required = true, @class = "input", @id = "txtUsuario", @autocomplete = "off", value = ViewData["usuario"] })
+                        @Html.Label("txtUsuario", "")
+                    </div>
+                </div>
+                <div class="input-div one">
+                    <div class="i">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <div class="div" name="" autocomplete="off" required>
+                        <h5>Contraseña</h5>
+                        @Html.PasswordFor(m => m.Ousuario.contraseña, new { @required = true, @class = "input", @id = "txtContra", @autocomplete = "off" })
+                        @Html.Label("txtContra", "")
+                    </div>
+                </div>
+                <div class="input-div one">
+                    <div class="i">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <div class="div" name="" autocomplete="off" required>
+                        <h5>Confirmar Contraseña</h5>
+                        @Html.PasswordFor(m => m.Ousuario.ConfirmarContra, new { @required = true, @class = "input", @id = "txtConfirmarContra", @autocomplete = "off" })
+                        @Html.Label("txtConfirmarContra", "")
+                    </div>
+                </div>
+            </div>
+
+            <a href="@Url.Action("Index","Acceso")">¿Ya tienes una cuenta? inicia sesion</a>
+
+            <div class="button-container">
+                <button type="submit" class="button-cambiar">Registrar</button>
+            </div>
+
+
+        </form>
+
+        @{
+            if (ViewBag.Error != null)
+            {
+                <div class="alert registrar" role="alert">
+                    @ViewBag.Error
+                </div>
+            }
+        }
+
+    </div>
+
+    <script type="text/javascript" src="~/Scripts/main.js"></script>
+    
+</body>
+
+</html>

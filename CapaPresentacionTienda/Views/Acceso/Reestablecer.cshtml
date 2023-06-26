@@ -1,0 +1,69 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Index</title>
+    <link rel="stylesheet" type="text/css" href="~/Content/ReestablecerStyle.css">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:600&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a81368914c.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+    <div class="contra-container">
+
+        <form method="post" action="@Url.Action("Reestablecer","Acceso")">
+
+            <div class="input-container">
+                <img src="~/Content/images/contra_img.png">
+                <a href="@Url.Action("Index", "Acceso")" class="button-atras">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Volver al login</span>
+                </a>
+
+            </div>
+
+            <div class="input-container">
+                <label class="label">RECUPERAR CONTRASEÑA</label>
+
+                <label class="label2">Ingrese su correo para recibir una clave de reestablecimiento</label>
+
+                <div class="input-div one">
+                    <div class="i">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="div" name="correo" autocomplete="off" required>
+                        <h5>Correo</h5>
+                        <input type="text" class="input" name="Correo" autocomplete="off">
+                    </div>
+                </div>
+
+
+                @{
+                    if (ViewBag.Error != null)
+                    {
+                        <div class="alert" role="alert">
+                            @ViewBag.Error
+                        </div>
+                    }
+                }
+
+                <div class="button-container">
+                    <button class="button-enviar">ENVIAR</button>
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <script type="text/javascript" src="~/Scripts/main.js"></script>
+</body>
+
+</html>

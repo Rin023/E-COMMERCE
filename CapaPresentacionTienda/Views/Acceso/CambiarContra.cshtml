@@ -1,0 +1,96 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>CambiarContraseña</title>
+    <link href="~/Content/styleRecuperar.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Poppins:600&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a81368914c.js"></script>
+</head>
+
+<body>
+    <div class="contra-container">
+
+        <label class="label">RECUPERAR CONTRASEÑA</label>
+        <hr>
+
+        <form method="post" action="@Url.Action("CambiarContra","Acceso")" class="form">
+            <input type="hidden" value="@TempData["id_usuario"]" name="idusuario">
+            <div class="input-container">
+
+
+                <input type="hidden" name="idusuario">
+
+                <div class="input-div one">
+                    <div class="i">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <div class="div" name="" autocomplete="off" required>
+                        <h5>Contraseña Anterior</h5>
+                        <input type="password" class="input" name="contraActual" autocomplete="off" value="@ViewData["vclave"]" required>
+                    </div>
+                </div>
+
+
+                <div class="input-div one">
+                    <div class="i">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <div class="div" name="" autocomplete="off" required>
+                        <h5>Nueva Contraseña</h5>
+                        <input type="password" class="input" name="nuevaContra" autocomplete="off" required>
+                    </div>
+                </div>
+
+
+                <div class="input-div one">
+                    <div class="i">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <div class="div" name="" autocomplete="off" required>
+                        <h5>Confirmar Contraseña</h5>
+                        <input type="password" class="input" name="ConfirmarContra" autocomplete="off" required>
+                    </div>
+                </div>
+            </div>
+
+            @{
+                if (ViewBag.Error != null)
+                {
+                    <div class="alert" role="alert">
+                        @ViewBag.Error
+                    </div>
+                }
+            }
+
+            <div class="button-container">
+                <button type="submit" class="button-cambiar">Cambiar</button>
+            </div>
+
+            <div class="atras-container">
+                <a href="@Url.Action("Index","Acceso")" class="button-atras">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Volver al login</span>
+                </a>
+            </div>
+
+
+
+
+        </form>
+
+
+
+    </div>
+
+    <script type="text/javascript" src="~/Scripts/main.js"></script>
+</body>
+
+</html>

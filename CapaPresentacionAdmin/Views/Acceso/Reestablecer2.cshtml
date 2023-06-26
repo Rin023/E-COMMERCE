@@ -1,0 +1,88 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Reestablecer</title>
+    @*<link href="~/Content/Site.css" rel="stylesheet" />*@
+    <link href="~/Content/acceso.css" rel="stylesheet" />
+</head>
+@*<body class="bg-dark">
+    <div id="layoutAuthentication">
+        <div id="layoutAuthentication_content">
+            <main>
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-5">
+                            <div class="card shadow-lg border-0 rounded-lg mt-5">
+                                <div class="card-header"><h3 class="text-center font-weight-light my-4">Recuperar Contraseña</h3></div>
+                                <div class="card-body">
+                                    <div class="small mb-3 text-muted">Ingrese su dirección de corro electrónico y le enviaremos su nueva contraseña.</div>
+                                    <form action="@Url.Action("Reestablecer","Acceso")" method="post">
+                                        <div class="form-floating mb-3">
+                                            <input class="form-control" name="correo" type="email" placeholder="name@example.com" />
+                                            <label for="inputEmail">Email</label>
+                                        </div>
+                                        <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
+                                            <a class="small" href="@Url.Action("Index","Acceso")">Regresar al login</a>
+                                            <button class="btn btn-primary" href="login.html">Reestablecer</button>
+                                        </div>
+                                        @{
+                                            if (ViewBag.Error != null)
+                                            {
+                                                <div class="form-floating mb-3">
+                                                    <div class="alert alert-danger" role="alert">
+                                                        @ViewBag.Error
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                    </form>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script src="~/Scripts/bootstrap.bundle.js"></script>
+</body>*@
+<body>
+    <div class="login restablecer">
+        <h2>RECUPERAR CONTRASEÑA</h2>
+        <hr>
+        <form method="post" action="@Url.Action("Reestablecer2","Acceso")" class="form">
+            <div class="field">
+                <span class="icon">
+                    <ion-icon name="mail"></ion-icon>
+                </span>
+                <input type="text" name="correo" autocomplete="off" required>
+                <label>Correo</label>
+            </div>
+            <div class="form-fotter">
+                <a href="@Url.Action("Index","Acceso")">Voler al login</a>
+                <button class="btn" href="login.html">Restablecer</button>
+                <span>ingrese su correo para recibir una clave de reestablecimiento</span>
+            </div>
+        </form>
+        @{
+            if (ViewBag.Error != null)
+            {
+                <div class="alert" role="alert">
+                    @ViewBag.Error
+                </div>
+            }
+        }
+    </div>
+    <script type="module"
+            src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule
+            src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

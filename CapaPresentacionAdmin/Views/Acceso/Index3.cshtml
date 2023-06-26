@@ -1,0 +1,59 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Index</title>
+    <link rel="stylesheet" type="text/css" href="~/Content/style.css">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:600&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a81368914c.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+
+    <div class="login-content">
+        <form action="@Url.Action("Index","Acceso")" method="post" class="form">
+            <img src="~/img/LoginBlue2.png">
+
+            @{
+                if (ViewBag.Error != null)
+                {
+                    <div class="alert" role="alert">
+                        @ViewBag.Error
+                    </div>
+                }
+            }
+
+
+            <div class="input-div one">
+                <div class="i">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="div">
+                    <h5>usuario</h5>
+                    <input type="text" class="input" name="usuario" autocomplete="off" required>
+                </div>
+            </div>
+            <div class="input-div pass">
+                <div class="i">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <div class="div">
+                    <h5>Contraseña</h5>
+                    <input type="password" class="input" name="contra" required>
+                </div>
+            </div>
+            <a href="@Url.Action("Reestablecer","Acceso")">¿Olvido su contraseña?</a>
+            <div class="button-container">
+                <button>inicio</button>
+            </div>
+        </form>
+
+     
+
+    </div>
+    <script type="text/javascript" src="~/Scripts/main.js"></script>
+</body>
+</html>

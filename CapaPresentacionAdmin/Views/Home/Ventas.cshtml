@@ -1,0 +1,512 @@
+﻿
+@{
+    ViewBag.Title = "Ventas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<ol class="breadcrumb mb-4 mt-4">
+
+    <li class="breadcrumb-item active">ventas</li>
+</ol>
+
+<div class="card">
+    <div class="card-header">
+        <i class="fas fa-shopping-bag me-2 "></i>Realizar Ventas
+    </div>
+
+    <div class="card-body">
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-12">
+                    <button type="button" class="btn btn-primary" onclick="abrirModal()"><i class="fas fa-shopping-cart me-3"></i>Ver Canasta</button>
+                 
+                </div>
+            </div>
+            <hr />
+
+            <h3>Productos</h3>
+            <hr />
+
+            <table id="tabla" class="display cell-border" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Precio</th>
+                        <th>Stock</th>
+                        <th>Categoria</th>
+                        <th>Catalogo</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="ModalCanasta" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title" id="exampleModalLabel">Canasta de venta</h5>
+            </div>
+
+            <div class="modal-body">
+
+
+                <div class="me-2">
+                    <div class="d-flex justify-content-between">
+                        <h5 class="ms-2 mt-2">Productos canasta</h5>
+                        <a data-bs-dismiss="modal" class="btn btn-primary"><i class="fas fa-cart-plus"></i>  Agregar</a>
+
+                    </div>
+
+                    <hr class="mt-2 mb-2" />
+
+                    <div id="Productos-canasta">
+                        <!--structura prod-->
+                    </div><!--fin contenedor-->
+                    <div class="d-flex justify-content-end">
+                        <label class="align-self-center"><b>SubTotal: $/. <span id="subtotal">0</span></b></label>
+                    </div>
+
+                    <div class="d-flex justify-content-end">
+                        <label class="align-self-center"><b>IVA: $/. <span id="IVA">0</span></b></label>
+                    </div>
+
+                    <div class="d-flex justify-content-end">
+                        <label class="align-self-center"><b>Total: +IVA $/. <span id="total">0</span></b></label>
+                    </div>
+                </div>
+
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" onclick="CancelarVenta()"><i class="fas fa-trash-restore"></i> Cancelar venta</button>
+                <button type="button" class="btn btn-primary" onclick="realizarVenta()"><i class="fas fa-shopping-bag"></i> Realizar venta</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section scripts{
+
+
+    <script>
+
+
+        var tabladata;
+        var filaSeleccionada;
+
+
+        function abrirModal() {
+            pintarProductos();
+            $("#ModalCanasta").modal("show");
+        }
+
+
+    //listar productos
+        tabladata = $("#tabla").DataTable({
+
+
+            responsive: true,
+            ordering: false,
+            "ajax": {
+                url: '@Url.Action("ListarProducto", "Home")',
+                type: "GET",
+                dataType: "json",
+
+            },
+
+            "columns": [
+                { "data": "nombre" },
+                { "data": "precio" },
+                { "data": "stock" },
+                {
+                    "data": "oCategoria", "render": function (data) {
+
+                        if (data) {
+                            return data.nombre_categoria
+                        }
+
+                    }
+                },
+                {
+                    "data": "oCatalogo", "render": function (data) {
+
+                        if (data) {
+                            return data.Nombre
+                        }
+                    }
+                },
+
+                {
+                    "defaultContent": '<button type="button" class="btn btn-primary mt-auto btn-agregar"><i class="fas fa-cart-plus"></i></button>',
+                    "orderable": false,
+                    "searchable": false,
+                    "width": "30px"
+
+                }
+
+            ],
+
+
+
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.12.1/i18n/es-ES.json"
+            } @* Cabiar lenguaje a español *@
+
+
+
+        });
+
+
+     //click agregar
+        $("#tabla tbody").on("click", '.btn-agregar', function () {
+
+            filaSeleccionada = $(this).closest("tr");
+            var data = tabladata.row(filaSeleccionada).data();
+
+            jQuery.ajax({
+                url: '@Url.Action("LlenarCanasta", "Home")',
+                type: "POST",
+                data: JSON.stringify({ id_producto: data.id_prod }),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+
+                    if (data.respuesta) {
+                        swal({
+                            title: "Agregar Producto",
+                            text: "Producto agregado correctamente",
+                            type: "success",
+                            confirmButtonClass: "btn-primary",
+                            confirmButtonText: "OK",
+                            closeOnConfirm: true
+                        }, function () {
+
+                            //pintar
+                            pintarProductos();
+
+                        })
+                    } else {
+                        swal("", data.mensaje, "warning");
+                    }
+
+                },
+                error: function (error) {
+                    console.log(error)
+                },
+                beforeSend: function () {
+
+                }
+            })
+
+        });
+
+        function pintarProductos() {
+               jQuery.ajax({
+                url: '@Url.Action("ListarProductosCanasta", "Home")',
+                type: "POST",
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+
+                    $("#Productos-canasta").html("");
+                    $("#Productos-canasta").LoadingOverlay("hide");
+                    if (response.data.length == 0) {
+                               // $("<img>").attr({"src": "/images/Dohl6F6XkAAhE50.jpg" })
+                        //.css({ "width": "100%", "height": "500px" }).appendTo("#Productos-canasta")
+                        $("<div>").addClass("card-body").append(
+                            $("<i>").addClass("fas fa-shopping-basket").css({ "width": "100%", "height": "200px" }),
+                            $("<h2>").addClass("text-sm-center").text("Canasta vacia")
+                        ).appendTo("#Productos-canasta")
+                    } else {
+                        $.each(response.data, function (i, item) {
+                            $("<div>").addClass("card mb-2 card-producto").append(
+                                $("<div>").addClass("card-body").append(
+                                    $("<div>").addClass("row").append(
+                                        //1.
+                                        $("<div>").addClass("col-sm-2 align-self-center d-flex justify-content-center").append(
+                                            $("<img>").addClass("rounded").attr({ "src": "data:image/" + item.Oproducto.extension + ";base64," + item.Oproducto.Base64 })
+                                                .css({ "width": "100px", "height": "100px" })
+                                        ),
+
+                                        //2
+                                        $("<div>").addClass("col-sm-4 align-self-center").append(
+                                            $("<span>").text(item.Oproducto.nombre),
+                                            $("<span>").text(item.Oproducto.descripcion)
+                                        ),
+                                        //3
+                                        $("<div>").addClass("col-sm-2 align-self-center").append(
+                                            $("<span>").text("$ "+item.Oproducto.precio.toFixed(2) + " USD")
+                                        ),
+                                        //4
+                                        $("<div>").addClass("col-sm-2 align-self-center").append(
+                                            $("<div>").addClass("d-flex").append(
+                                                $("<button>").addClass("btn btn-outline-secondary btn-restar rounded-0").append($("<i>").addClass("fas fa-minus")),
+                                                $("<input>").addClass("form-control input-cantidad p-1 text-center rounded-0").attr({ "disabled": "disabled" })
+                                                    .css({ "width": "40px" })
+                                                    .data("Oproducto", item.Oproducto).val(item.unidades),
+                                                $("<button>").addClass("btn btn-outline-secondary btn-sumar rounded-0").append($("<i>").addClass("fas fa-plus")),
+
+                                            )
+                                        ),
+                                        //5
+                                        $("<div>").addClass("col-sm-2 align-self-center").append(
+                                            $("<button>").addClass("btn btn-outline-danger btn-eliminar rounded-0").append($("<i>").addClass("far fa-trash-alt"), " Eliminar")
+                                             .data("id_prod", item.Oproducto.id_prod),
+                                        )
+                                    )
+
+                                )
+
+
+                            ).appendTo("#Productos-canasta")
+                        })
+
+                    }
+                    sumarTotal();
+                   },
+                   error: function (error) {
+                       $("#Productos-canasta").LoadingOverlay("hide");
+                   },
+                   beforeSend: function () {
+                       $("#Productos-canasta").LoadingOverlay("show");
+                   }
+               })
+
+
+        }
+        //sumar totales
+        function sumarTotal() {
+            var sumaTotal = parseFloat(0);
+            var subtotal = parseFloat(0);
+            let IVA
+
+            $("input.input-cantidad").each(function (i) {
+                var precio = $(this).data("Oproducto").precio;
+                var cantidad = parseFloat($(this).val())
+
+                subtotal = precio * cantidad;
+
+                sumaTotal += subtotal;
+
+            })
+
+            $("#subtotal").text(sumaTotal.toFixed(2))
+            $("#subtotal").data("subtotal", sumaTotal)
+
+            IVA = (sumaTotal * 0.15)
+            $("#IVA").text(IVA.toFixed(2))
+            sumaTotal = (sumaTotal + IVA)
+
+            $("#total").text(sumaTotal.toFixed(2))
+            $("#total").data("sumatotal", sumaTotal)
+
+        }
+        //sumar unidades
+        $("#ModalCanasta").on("click", ".btn-sumar", function () {
+            var div_contenedor = $(this).parent("div.d-flex");
+
+            var input_cantidad = $(div_contenedor).find("input.input-cantidad");
+
+            var btn = $(this)
+
+            var id_prod = $(input_cantidad).data("Oproducto").id_prod;
+
+            jQuery.ajax({
+                url: '@Url.Action("OperacionCanasta", "Home")',
+                type: "POST",
+                data: JSON.stringify({ id_producto: id_prod, sumar: true }),
+                dataType:"json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    $(btn).LoadingOverlay("hide")
+                    if (data.respuesta) {
+                        var cantidad = parseInt(input_cantidad.val()) + 1;
+                        $(input_cantidad).val(cantidad)
+                        sumarTotal()
+                    } else {
+                        swal("", data.mensaje,"warning")
+                    }
+                },
+                beforeSend: function () {
+                    $(btn).LoadingOverlay("show")
+                },
+                error: function (error) {
+                    $(btn).LoadingOverlay("hide")
+                }
+            })
+        })
+
+        //restar unidades
+         $("#ModalCanasta").on("click", ".btn-restar", function () {
+            var div_contenedor = $(this).parent("div.d-flex");
+
+            var input_cantidad = $(div_contenedor).find("input.input-cantidad");
+
+            var btn = $(this)
+
+            var id_prod = $(input_cantidad).data("Oproducto").id_prod;
+
+            var cantidad = parseInt(input_cantidad.val()) - 1;
+
+             if (cantidad >= 1) {
+
+                jQuery.ajax({
+                    url: '@Url.Action("OperacionCanasta", "Home")',
+                    type: "POST",
+                    data: JSON.stringify({ id_producto: id_prod, sumar: false }),
+                    dataType:"json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+
+                    $(btn).LoadingOverlay("hide")
+                    if (data.respuesta) {
+
+                        $(input_cantidad).val(cantidad)
+                        sumarTotal()
+                    } else {
+                        swal("", data.mensaje,"warning")
+                    }
+                },
+                beforeSend: function () {
+                    $(btn).LoadingOverlay("show")
+                },
+                error: function (error) {
+                    $(btn).LoadingOverlay("hide")
+                }
+                })
+             }
+
+
+        })
+
+
+          //eliminar productos de la canasta
+         $("#ModalCanasta").on("click", ".btn-eliminar", function () {
+
+             var id_prod = $(this).data("id_prod");
+             var card_producto = $(this).parents("div.card-producto");
+
+                jQuery.ajax({
+                    url: '@Url.Action("EliminarDeCanasta", "Home")',
+                    type: "POST",
+                    data: JSON.stringify({ id_producto: id_prod,}),
+                    dataType:"json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+                            if (data.respuesta) {
+                                    card_producto.remove();
+                                    sumarTotal();
+                            } else {
+                                    swal("", data.mensaje, "warning")
+                            }
+                        }
+                })
+             pintarProductos();
+        })
+
+        function realizarVenta() {
+
+            const response = new Promise((resolve, reject) => {
+                jQuery.ajax({
+                    url: '@Url.Action("RealizarVenta", "Home")',
+                    type: "GET",
+                    data: null,
+                    dataType:"json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+                        if (data.respuesta) {
+
+                            //swal("", data.mensaje, "success")
+                            resolve(data)
+
+                            $("#ModalCanasta").modal("hide");
+                        } else {
+                            reject("la venta no pudo reslizarse")
+                            swal("", data.mensaje,"warning")
+                      }
+                }
+                })
+
+            })
+
+            response.then((res) => {
+
+                swal({
+                    title: res.mensaje,
+                    text: "¿Desea imprimir factura?",
+                    type: "success",
+                    showCancelButton: true,
+                    confirmButtonClass: "btn-primary",
+                    cancelButtonClass: "btn-danger",
+                    confirmButtonText: "Si",
+                    cancelButtonText: "No",
+                    closeOnConfirm: true
+                }, function () {
+                  
+                    jQuery.ajax({
+                    url: '@Url.Action("ImprimirFactura", "Home")',
+                    type: "POST",
+                    data: JSON.stringify({ id_venta: res.id_venta }),
+                    //ELIMINAMOS EL dataType por que retornamos un txt en la data
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+                        //imprimimos sin abrir nueva ventana
+                        var iframe = document.createElement('iframe');
+                        iframe.style.display = 'none';
+                        document.body.appendChild(iframe);
+                        iframe.contentDocument.write(data);
+                        iframe.contentDocument.close();
+                        iframe.onload = function () {
+                            iframe.contentWindow.print();
+                            document.body.removeChild(iframe);
+                        };
+                        //abriendo la factura en nueva ventana
+                        //var newWindow = window.open("", "_blank");
+                        //newWindow.document.write(data);
+                        //newWindow.print();
+                        //newWindow.close();
+                        },
+                        error: function () {
+                            swal("", "Ha ocurrido un error al imprimir la factura", "error");
+                        }
+                    })
+                 })
+            })
+
+        }
+
+            function CancelarVenta() {
+                jQuery.ajax({
+                    url: '@Url.Action("CancelarVenta", "Home")',
+                    type: "GET",
+                    data: null,
+                    dataType:"json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+                      if (data.respuesta) {
+                            swal("", data.mensaje, "success")
+                            $("#ModalCanasta").modal("hide");
+                      } else {
+                        swal("", data.mensaje,"warning")
+                      }
+                }
+                })
+
+             }
+
+
+
+
+
+
+    </script>
+
+}

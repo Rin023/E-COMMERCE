@@ -1,0 +1,130 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>CambiarContraseña</title>
+    @*<link href="~/Content/Site.css" rel="stylesheet" />*@
+    <link href="~/Content/acceso.css" rel="stylesheet" />
+</head>
+@*<body class="bg-dark">
+    <div id="layoutAuthentication">
+        <div id="layoutAuthentication_content">
+            <main>
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-7">
+                            <div class="card shadow-lg border-0 rounded-lg mt-5">
+                                <div class="card-header"><h3 class="text-center font-weight-light my-4">Cambiar Contraseña</h3></div>
+                                <div class="card-body">
+                                    
+                                    <form action="@Url.Action("CambiarContraseña","Acceso")" method="post">
+                                        <input class="form-control" type="hidden" value="@TempData["id_usuario"]" name="idusuario">
+
+                                        <div class="row mb-3">
+                                            <div class="col-md-12">
+                                                <div class="form-floating mb-3 mb-md-0">
+                                                    <input class="form-control" id="inputPassword" type="password" name="contraActual" value="@ViewData["vclave"]" placeholder=".">
+                                                    <label for="inputPassword">Contraseña Actual</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-md-12">
+                                                <div class="form-floating mb-3 mb-md-0">
+                                                    <input class="form-control" id="inputPassword" type="password" name="nuevaContra" placeholder=".">
+                                                    <label for="inputPassword">Nueva Contraseña</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-md-12">
+                                                <div class="form-floating mb-3 mb-md-0">
+                                                    <input class="form-control" id="inputPassword" type="password" name="ConfirmarContra" placeholder=".">
+                                                    <label for="inputPassword">Confirmar Nueva Contraseña</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @{
+                                            if (ViewBag.Error != null)
+                                            {
+                                                <div class="form-floating mb-3">
+                                                    <div class="alert alert-danger" role="alert">
+                                                        @ViewBag.Error
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                        <div class="mt-4 mb-0">
+                                            <div class="d-grid"><button class="btn btn-primary btn-block" type="submit">Cambiar Contraseña</button></div>
+                                         </div>
+                                    </form>
+                                </div>
+                                <div class="card-footer text-center py-3">
+                                    <div class="small"><a href="@Url.Action("Index","Acceso")">Vover</a></div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script src="~/Scripts/bootstrap.bundle.js"></script>
+</body>*@
+
+<body>
+    <div class="login cambio">
+        <h2>RESTABLECER</h2>
+        <hr>
+        <form method="post" action="@Url.Action("CambiarContraseña","Acceso")"  class="form">
+            <input type="hidden" value="@TempData["id_usuario"]" name="idusuario">
+            <div class="field">
+                <span class="icon">
+                    <ion-icon name="lock-open"></ion-icon>
+                </span>
+                <input type="password" name="contraActual" autocomplete="off" value="@ViewData["vclave"]" required>
+                <label>Contraseña actual</label>
+            </div>
+            <div class="field">
+                <span class="icon">
+                    <ion-icon name="lock-closed"></ion-icon>
+                </span>
+                <input type="password" name="nuevaContra" autocomplete="off" required>
+                <label>Nueva contraseña</label>
+            </div>
+            <div class="field">
+                <span class="icon">
+                    <ion-icon name="lock-closed"></ion-icon>
+                </span>
+                <input type="password" name="ConfirmarContra" autocomplete="off" required>
+                <label>Confirmar contraseña</label>
+            </div>
+            <div class="form-fotter">
+                <a href="@Url.Action("Index","Acceso")">regresar login</a>
+                <button type="submit" class="btn">Cambiar contraseña</button>
+            </div>
+        </form>
+        @{
+            if (ViewBag.Error != null)
+            {
+                <div class="alert" role="alert">
+                    @ViewBag.Error
+                </div>
+            }
+        }
+    </div>
+
+    <script type="module"
+            src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule
+            src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+</body>
+</html>

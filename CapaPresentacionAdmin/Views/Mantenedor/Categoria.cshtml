@@ -1,0 +1,362 @@
+﻿
+@{
+    ViewBag.Title = "Categoria";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<ol class="breadcrumb mb-4 mt-4">
+   
+    <li class="breadcrumb-item active">Categoria</li>
+</ol>
+
+<div class="card">
+    <div class="card-header">
+        <i class="fas fa-table me-2"></i>Categorías
+    </div>
+
+    <div class="card-body">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12">
+
+                    <button type="button" class="btn btn-primary justify-content-between" onclick="AbrirModalNuevaCategoria(null)">
+                        <i class="fas fa-plus me-3 "></i>Nueva Categoria
+
+                    </button>
+                </div>
+            </div>
+            <hr />
+            <table id="tablaCategoria" class="display cell-border" style="width: 100%">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Catalogo</th>
+                        <th>Categoria</th>
+                        <th>Estado</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal  INGRESAR UN NUEVO CATEGORIA-->
+<div class="modal fade" id="FormModalNuevaCategoria" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title" id="exampleModalLabel">Categoría</h5>
+            </div>
+            <div class="modal-body">
+
+                <input id="txtid" type="hidden" value="" />
+
+                <div class="row g-2">
+
+                    <div class="col-sm-6 mb-3">
+                        <label class="form-label">Catalogo</label>
+                        <select id="txtIDcat" class="form-select">
+                        </select>
+                    </div>
+
+                    <div class="col-sm-6 mb-3">
+                        <label for="txtNombreCate" class="form-label">Categoria:</label>
+                        <input type="text" class="form-control" id="txtNombreCate" autocomplete="off">
+                    </div>
+
+                    <div class="col-sm-6 mb-3">
+                        <label class="form-label">Estado</label>
+                        <select id="TipoEstado" class="form-select">
+                            <option value="" disabled>Seleccionar</option>
+                            <option value="HABILITADO  ">HABILITADO</option>
+                            <option value="INHABILITADO">INHABILITADO</option>
+                        </select>
+                    </div>
+
+
+                </div>
+                @*--------------------------MODAL DANGER*@
+                <div class="row mt-4">
+                    <div class="col-12">
+
+                        <div id="mensajeError" class="alert alert-danger" role="alert">
+                            This is a danger alert—check it out!
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" onclick="GuardarCategoria()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+
+    @*TABLA DE CATEGORIAS*@
+
+<script>
+
+
+
+    var tabladata;
+    var filaseleccionada;
+
+    tabladata = $("#tablaCategoria").DataTable({
+            rresponsive: true,
+            ordering: false,
+            "ajax": {
+                url: '@Url.Action("ListarCategoria", "Mantenedor")',
+                type: "GET",
+                datType: "json",
+            },
+
+            "columns": [
+                { "data": "id_categoria" },
+                { "data": "oCatalogo.id_catalogo" },
+                { "data": "nombre_categoria" },
+                {
+                    "data": "estado", "render": function (valor) {
+
+                        if (valor == "HABILITADO  ") {
+                            return '<span class="badge bg-success">HABILITADO</span>'
+                        } else {
+                            return '<span class="badge bg-danger">INHABILITADO</span>'
+                        }
+                    }
+                },
+
+                {
+                    "defaultContent": '<button type="button" class="btn btn-primary btn-sm btn-editar"><i class="fas fa-pen"></i></button>' +
+                        '<button type="button" class="btn btn-danger btn-sm ms-2 btn-eliminar" ><i class="fas fa-trash"></i></button> ',
+                    "orderable": false,
+                    "searchable": false,
+                    "width": "90px"
+                }
+
+            ],
+
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.12.1/i18n/es-ES.json"
+            }  @* Cabiar lenguaje a español *@
+    });
+
+         jQuery.ajax({
+            url: '@Url.Action("ListarCatalogo","Mantenedor")',
+            type: "GET",
+            data:null,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+
+                $.each(data.data, function (index, valor) {
+
+                    $("<option>").attr({ "value": valor.id_catalogo }).text(valor.Nombre).appendTo("#txtIDcat");
+                })
+            },
+            error: function (error) {
+                console.log(error)
+            }
+        })
+
+    function AbrirModalNuevaCategoria(json) {
+        $("#txtIDcat").prop('disabled', 'disabled');
+
+            $("#txtid").val("")
+            $("#txtIDcat").val($("#txtIDcat option:first").val());
+            $("#txtNombreCate").val("");
+            $("#TipoEstado").val($("#TipoEstado option:first").val());
+            $("#mensajeError").hide();
+
+            if (json != null) {
+
+                $("#txtid").val(json.id_categoria);
+                $("#txtIDcat").val(json.oCatalogo.id_catalogo);
+                $("#txtNombreCate").val(json.nombre_categoria);
+                $("#TipoEstado").val(json.estado);
+            }
+            $("#FormModalNuevaCategoria").modal("show");
+    }
+
+     //click editar
+        $('#tablaCategoria tbody').on("click", '.btn-editar', function () {
+
+            filaseleccionada = $(this).closest("tr");
+
+            var data = tabladata.row(filaseleccionada).data();
+            console.log(data);
+            AbrirModalNuevaCategoria(data)
+        })
+
+     //click ELIMINAR
+    $("#tablaCategoria tbody").on("click", '.btn-eliminar', function () {
+        var resultado
+        var categoriaSeleccionada = $(this).closest("tr");
+        var data = tabladata.row(categoriaSeleccionada).data();
+
+              jQuery.ajax({
+                    url: '@Url.Action("EliminarCategoria", "Mantenedor")',
+                    type: "POST",
+                    data: JSON.stringify({ id: data.id_categoria }),
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+
+                        if (data.resultado) {
+
+                            swal({
+                                title: "Genial!",
+                                text: "Categoria deshabilitada",
+                                type: "success",
+                                timer: 1700,
+                                showConfirmButton: false
+                            });
+                            tabladata.row(categoriaSeleccionada).remove().draw();
+                        } else {
+
+                            swal({
+                                title: ":(!",
+                                text: "Opss.. parece que hubo un problema",
+                                type: "success",
+                               
+                                showConfirmButton: true
+                            });
+                        }
+                    },
+                    error: function (error) {
+                        console.log(error)
+                    }
+                });
+        @*swal({
+            title: "Estas seguro?",
+            text: "Desea deshabilitar esta categoria?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonClass: "btn-primary",
+            cancelButtonClass: "btn-danger",
+            confirmButtonText: "Si",
+            cancelButtonText: "No",
+            closeOnConfirm: true
+        },
+            function () {
+
+                jQuery.ajax({
+                    url: '@Url.Action("EliminarCategoria", "Mantenedor")',
+                    type: "POST",
+                    data: JSON.stringify({ id: data.id_categoria }),
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+
+                        if (data.resultado) {
+
+                            swal("", "Se inhabilito correctamente", "success")
+                            tabladata.row(categoriaSeleccionada).remove().draw();
+                        } else {
+
+                            swal("", "hubo un error", "error")
+                        }
+                    },
+                    error: function (error) {
+                        console.log(error)
+                    }
+                });
+            });*@
+
+
+    })
+
+        function GuardarCategoria() {
+
+            var categoria = {
+
+                id_categoria: $("#txtid").val(),
+                oCatalogo: { id_catalogo: $("#txtIDcat").val()},
+                nombre_categoria: $("#txtNombreCate").val(),
+                estado: $("#TipoEstado").val(),
+            }
+
+            var request = new FormData();
+            request.append("objeto", JSON.stringify(categoria))
+
+            jQuery.ajax({
+                url: '@Url.Action("GuardarCategoria", "Mantenedor")',
+                type: "POST",
+                data: request,
+                processData: false,
+                contentType: false,
+
+                success: function (data) {
+
+                    console.log(data);
+
+                    $(".modal-body").LoadingOverlay("hide");
+                    if (categoria.id_categoria == "") {
+
+                        if (data.idcat != "") {
+
+                            categoria.id_categoria = data.idcat;
+                            tabladata.row.add(categoria).draw(false);
+                            $("#FormModalNuevaCategoria").modal("hide");
+                            swal({
+                                title: "Genial!",
+                                text: data.mensaje,
+                                type: "success",
+                                timer: 1700,
+                                showConfirmButton: false
+                            });
+                        } else {
+                            $("#mensajeError").text(data.mensaje);
+                            $("#mensajeError").show();
+                        }
+
+                    } else {
+
+                       //editar
+                          if (data.salida) {
+
+                              tabladata.row(filaseleccionada).data(categoria).draw(false);
+                              filaseleccionada = null;
+                              $("#FormModalNuevaCategoria").modal("hide");
+                              swal({
+                                  title: "Genial!",
+                                  text: data.mensaje,
+                                  type: "success",
+                                  timer: 1700,
+                                  showConfirmButton: false
+                              });
+                          } else {
+                                $("#mensajeError").text(data.mensaje);
+                                $("#mensajeError").show();
+                          }
+
+                    }
+                },
+                error: function (error) {
+                    console.log(error)
+                },
+                beforeSend: function () {
+                    $(".modal-body").LoadingOverlay("show", {
+                        imageResizeFactor: 2,
+                        Text: "Cargando...",
+                        size: 14
+                    })
+                }
+            });
+        }
+
+
+</script>
+}
+

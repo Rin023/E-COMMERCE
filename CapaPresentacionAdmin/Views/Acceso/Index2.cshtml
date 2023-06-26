@@ -1,0 +1,107 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    @*<link href="~/Content/Site.css" rel="stylesheet" />*@
+    <link href="~/Content/acceso.css" rel="stylesheet" />
+
+</head>
+@*<body class="bg-dark">
+    <div id="layoutAuthentication">
+        <div id="layoutAuthentication_content">
+            <main>
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-5">
+                            <div class="card shadow-lg border-0 rounded-lg mt-5">
+                                <div class="card-header"><center><img src="~/img/FerreteriaLogo3.png" width="200" height="80"/></center></div>
+                                <div class="card-body">
+                                    
+                                    <form action="@Url.Action("Index","Acceso")" method="post">
+                                        <div class="form-floating mb-3">
+                                            <input class="form-control" name="usuario" type="text" autocomplete="off" />
+                                            <label for="inputUsuario">Usuario</label>
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            <input class="form-control" name="contra" type="password" />
+                                            <label for="inputPassword">Contraseña</label>
+                                        </div>
+
+                                        @{
+                                            if (ViewBag.Error != null)
+                                            {
+                                                <div class="form-floating mb-3">
+                                                    <div class="alert alert-danger" role="alert">
+                                                        @ViewBag.Error
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+
+                                        <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
+                                            <a class="small" href="@Url.Action("Reestablecer","Acceso")">¿Olvidaste tu contraseña?</a>
+                                            <button class="btn btn-primary" type="submit">Iniciar Sesión</button>
+                                        </div>
+
+                                       
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+      
+    </div>
+    <script src="~/Scripts/bootstrap.bundle.js"></script>
+</body>*@
+<body>
+    <div class="login">
+        <div class="login-header">
+            <img src="~/img/FerreteriaLogo3.png" alt="logo-ferreteria">
+        </div>
+        <form action="@Url.Action("Index","Acceso")" method="post" class="form">
+            <div class="field">
+                <span class="icon">
+                    <ion-icon name="person"></ion-icon>
+                </span>
+                <input type="text" name="usuario" autocomplete="off" required>
+                <label>Usuario</label>
+            </div>
+            <div class="field">
+                <span class="icon">
+                    <ion-icon name="lock-closed"></ion-icon>
+                </span>
+                <input type="password" name="contra" autocomplete="off" required>
+                <label>Contraseña</label>
+            </div>
+            <div class="form-fotter">
+                <a  href="@Url.Action("Reestablecer","Acceso")">Olvidaste tu contraseña?</a>
+                <button type="submit" class="btn">Iniciar sesion</button>
+            </div>
+        </form>
+        @{
+            if (ViewBag.Error != null)
+            {
+                <div class="alert" role="alert">
+                    @ViewBag.Error
+                </div>
+            }
+        }
+
+    </div>
+
+    <script type="module"
+            src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule
+            src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

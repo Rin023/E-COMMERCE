@@ -1,0 +1,118 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Mi tienda online</title>
+    @Styles.Render("~/Content/css")
+    @*@Scripts.Render("~/bundles/modernizr")*@
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand"><img src="~/Content/images/logo2.2.png" width="200" height="70"/></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+        <div class=" collapse navbar-collapse" id="navbarSupportedContent" style="width:50%">
+            <ul class="navbar-nav mb-2 me-auto mb-lg-0 ms-lg-4 w-75">
+                <li class="nav-item"><a class="nav-link active" aria-current="page" href="@Url.Action("Index","Tienda")">Inicio</a></li>
+                @*buscador*@
+                <li class="nav-item w-100" id="buscador" hidden>
+
+                        <div class="height d-flex justify-content-center align-items-center flex-grow-1">
+                            <div class="col-md-9">
+                                <div class="search d-flex justify-content-center align-items-center gap-xl-3">
+                                    <i class="fa fa-search"></i>
+                                    <input type="text" class="form-control" placeholder="Buscas algo especifico?" id="producto_especifico">
+                                    <button class="btn btn-primary" id="btn_prod_espe">Search</button>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    
+                </li>
+                
+            </ul>
+            <form class="d-flex gap-xl-4">
+
+                @if (Session["USUARIO"] == null)
+                {
+                    <a class="btn btn-outline-dark" aria-current="page" href="@Url.Action("Index", "Acceso")"><i class="fas fa-sign-out-alt me-1"></i>Iniciar Sesion</a>
+
+                }
+                else
+                {
+
+
+                    @*<a id="btnpendiente" class="btn btn-outline-dark" style="margin-right:10px" href="@Url.Action("Pendientes","Tienda")">
+                        <i class="fas fa-truck-loading me-1"></i>
+                        Pendientes
+
+                    </a>*@
+
+                    <a id="btncarrito" class="btn btn-outline-dark" href="@Url.Action("Carrito", "Tienda")">
+                        <i class="fas fa-shopping-cart me-1"></i>
+                        Carrito
+                        <span class="badge bg-dark text-white ms-1 rounded-pill" id="cantidadcarrito">0</span>
+                    </a>
+
+                    <ul class="navbar-nav ms-auto me-0 me-md-3 my-2 my-md-0">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+
+                                <li><a class="dropdown-item" href="#!"><b>@User.Identity.Name</b></a></li>
+                                <li><a class="dropdown-item" href="@Url.Action("MisCompras","Tienda")">Mis compras</a></li>
+                                <li><hr class="dropdown-divider" /></li>
+                                <li><a class="dropdown-item" href="@Url.Action("CerrarSesion", "Acceso")">Cerrar Sesion</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                }
+            </form>
+        </div>
+        </div>
+    </nav>
+    <!-- Header-->
+    @RenderBody()
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+
+<script>
+
+    $(document).ready(function () {
+
+        MostrarCantidadCarrito();
+
+    })
+        function MostrarCantidadCarrito() {
+
+            if ($("#cantidadcarrito").length > 0) {
+
+                jQuery.ajax({
+
+                    url: '@Url.Action("CantidadCarrito", "Tienda")',
+                    type: "GET",
+                    dataType: "json",
+                    contentType: "application/json; charset=uf-8",
+                    success: function (data) {
+
+                        $("#cantidadcarrito").text(data.cantidad)
+                    }
+
+                });
+
+
+            }
+
+        }
+
+</script>
+
+
+</body>
+</html>
+
+
